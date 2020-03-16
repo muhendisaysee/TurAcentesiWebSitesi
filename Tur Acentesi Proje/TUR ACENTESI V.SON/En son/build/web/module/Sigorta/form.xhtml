@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="sigorta-form" rendered="#{yetkilendirmeController.readKontrol and (yetkilendirmeController.createKontrol or yetkilendirmeController.updateKontrol)}">
+        <div class="form-group">
+            <div class="form-group">
+                <label for="secimAcente">Acente Şube Adi</label>
+                <h:selectOneMenu styleClass="custom-select" id="secimAcente" value="#{sigortaController.sigorta.acente}" converter="acenteConverter" >
+                    <f:selectItems value="#{sigortaController.acenteList}" var="Acente" itemValue="#{Acente}" itemLabel="#{Acente.sube_adi}"/>
+                </h:selectOneMenu>                                
+                <label for="inputName" class="">Sigorta Adı</label>
+                <h:inputText validator="#{sigortaController.validateDuzen}" id="sigortaKontrol" class="form-control" value="#{sigortaController.sigorta.sigorta_adi}"/>
+                <h:messages for="sigortaKontrol" styleClass="alert-danger" />
+                <label for="inputName" class="">Sigorta Süresi </label> 
+                <h:inputText validator="#{sigortaController.validateSigortaSure}" id="sureKontrol" converterMessage="Sadece rakam giriniz." class="form-control" value="#{sigortaController.sigorta.sigorta_suresi}"/>
+                <h:messages for="sureKontrol" styleClass="alert-danger" />
+            </div>
+            <div class="btn-group">
+                <h:commandButton rendered="#{sigortaController.sigorta.sigorta_id == null and yetkilendirmeController.createKontrol}" styleClass="btn btn-primary"  value="Olustur" action="#{sigortaController.create}">
+                    <f:ajax execute="sigorta-form" render="sigorta-form sigorta-table paginationSigorta" />
+                </h:commandButton>
+                <h:commandButton rendered="#{sigortaController.sigorta.sigorta_id != null and yetkilendirmeController.updateKontrol}" styleClass="btn btn-info"   value="Guncelle" action="#{sigortaController.update()}">
+                    <f:ajax execute="sigorta-form" render="sigorta-form sigorta-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{sigortaController.sigorta.sigorta_id != null}" styleClass="btn btn-success"   value="Temizle" action="#{sigortaController.clearForm}">
+                    <f:ajax execute="@this" render="sigorta-form sigorta-table" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>   
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="block" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>Sigorta ID: </b><h:head>#{sigortaController.sigorta.sigorta_id}</h:head><br/>
+                    <b>Sigorta Adı: </b><h:head>#{sigortaController.sigorta.sigorta_adi}</h:head>
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton  action="#{sigortaController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="sigorta-table sigorta-form paginationSigorta" />
+                        </h:commandButton>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form> 
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+</ui:composition>

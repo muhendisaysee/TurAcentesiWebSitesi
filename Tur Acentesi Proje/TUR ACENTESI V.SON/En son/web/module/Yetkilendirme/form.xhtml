@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="yetkilendirme-form" rendered="#{yetkilendirmeController.accessKontrol and yetkilendirmeController.readKontrol and (yetkilendirmeController.createKontrol or yetkilendirmeController.updateKontrol)}">
+        <div class="form-group">
+            <div class="form-group">
+                <label for="secimGrup">Grup Adı</label>
+                <h:selectOneMenu  styleClass="custom-select" id="secimAcente" value="#{yetkilendirmeController.yetkilendirme.grup}" converter="grupConverter">
+                    <f:selectItems  value="#{yetkilendirmeController.grupList}" var="yetkilendirme"  itemValue="#{yetkilendirme}" rendered="#{yetkilendirme.grup_id!=3}" itemLabel="#{yetkilendirme.grup_adi}"/>
+                </h:selectOneMenu>
+                <label for="inputName" class="">Yetkilendirme Adı </label>
+                <h:selectOneMenu  styleClass="custom-select" value="#{yetkilendirmeController.yetkilendirme.y_bolum_adi}">
+                    <f:selectItems  value="#{yetkilendirmeController.yetkilendirmeAdlari}" var="yetkilendirme" itemValue="#{yetkilendirme}" itemLabel="#{yetkilendirme}"/>
+                </h:selectOneMenu>
+            </div>
+            <div class="btn-group">
+                <h:commandButton rendered="#{yetkilendirmeController.yetkilendirme.yetkilendirme_id == null and yetkilendirmeController.createKontrol}" styleClass="btn btn-primary" value="Olustur" action="#{yetkilendirmeController.create()}">
+                    <f:ajax execute="yetkilendirme-form" render="yetkilendirme-form yetkilendirme-table paginationYetkilendirme" />
+                </h:commandButton>
+                <h:commandButton rendered="#{yetkilendirmeController.yetkilendirme.yetkilendirme_id != null and yetkilendirmeController.updateKontrol}" styleClass="btn btn-info"  value="Guncelle" action="#{yetkilendirmeController.update()}">
+                    <f:ajax execute="yetkilendirme-form" render="yetkilendirme-form yetkilendirme-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{yetkilendirmeController.yetkilendirme.yetkilendirme_id != null}" styleClass="btn btn-success"   value="Temizle" action="#{yetkilendirmeController.clearForm()}">
+                    <f:ajax execute="@this" render="yetkilendirme-form yetkilendirme-table" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="blockk" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>Tur ID: </b><h:head>#{yetkilendirmeController.yetkilendirme.yetkilendirme_id}</h:head><br/>
+                    <b>Bolum Adı: </b><h:head>#{yetkilendirmeController.yetkilendirme.y_bolum_adi}</h:head>
+
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton action="#{yetkilendirmeController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="yetkilendirme-table yetkilendirme-form paginationYetkilendirme" />
+                        </h:commandButton>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form>
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+</ui:composition>

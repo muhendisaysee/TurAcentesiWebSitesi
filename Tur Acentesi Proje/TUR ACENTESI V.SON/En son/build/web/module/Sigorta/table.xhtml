@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="sigorta-table" rendered="#{yetkilendirmeController.readKontrol}">
+        
+        <h:dataTable styleClass="table table-hover" value="#{sigortaController.sigortaList}" var="sigorta">  
+            <h:column>                    
+                <f:facet name="header">SİGORTA ID</f:facet>
+                    #{sigorta.sigorta_id}
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">SİGORTA ADI</f:facet>                            
+                <h:commandLink value="#{sigorta.sigorta_adi}" action="#{sigortaController.updateForm(sigorta)}">
+                    <f:ajax execute="@this" render="sigorta-form" />
+                </h:commandLink>
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">SİGORTA SÜRESİ</f:facet>
+                    #{sigorta.sigorta_suresi}
+            </h:column>
+            <h:column>                    
+                <f:facet name="header">ACENTE ŞUBE</f:facet>
+                    #{sigorta.acente.sube_adi}
+            </h:column>
+            <h:column rendered="#{yetkilendirmeController.deleteKontrol}"> 
+                <f:facet name="header"></f:facet>
+                <h:commandButton onclick="$('.modal').modal('show')" value="SİL" styleClass="btn btn-danger" action="#{sigortaController.deleteConfirm(sigorta)}">
+                    <f:ajax execute="@this" render="delete-modal delete" />
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>                
+    </h:form>
+
+</ui:composition>

@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="otel-form" rendered="#{yetkilendirmeController.readKontrol and (yetkilendirmeController.createKontrol or yetkilendirmeController.updateKontrol)}">
+        <div class="form-group">
+            <div class="form-group">
+                <label for="secimAcente">Acente Şube Adi</label>
+                <h:selectOneMenu styleClass="custom-select" id="secimAcente" value="#{otelController.otel.acente}" converter="acenteConverter" >
+                    <f:selectItems value="#{otelController.acenteList}" var="Acente" itemValue="#{Acente}" itemLabel="#{Acente.sube_adi}" />
+                </h:selectOneMenu>
+                <label for="inputName" class="">Otel adı</label>
+                <h:inputText validator="#{otelController.validateDuzen}" id="otelKontrol" class="form-control" value="#{otelController.otel.otel_adi}"/>
+                <h:messages for="otelKontrol" styleClass="alert-danger" />
+                <label for="inputName" class="">Otel Yıldızı </label> 
+                <h:inputText validator="#{otelController.validateYildizKontrol}" converterMessage="Sadece rakam giriniz."  id="otelyildizKontrol" class="form-control" value="#{otelController.otel.otel_yildizi}"/>
+                <h:messages for="otelyildizKontrol" styleClass="alert-danger" />
+            </div>
+            <div class="btn-group">
+                <h:commandButton rendered="#{otelController.otel.otel_id == null and yetkilendirmeController.createKontrol}" styleClass="btn btn-primary" value="Olustur" action="#{otelController.create}">
+                    <f:ajax execute="otel-form" render="otel-form otel-table paginationOtel" />
+                </h:commandButton>
+                <h:commandButton rendered="#{otelController.otel.otel_id != null and yetkilendirmeController.updateKontrol}" styleClass="btn btn-info"  value="Guncelle" action="#{otelController.update()}">
+                    <f:ajax execute="otel-form" render="otel-form otel-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{otelController.otel.otel_id != null}" styleClass="btn btn-success"   value="Temizle" action="#{otelController.clearForm}">
+                    <f:ajax execute="@this" render="otel-form otel-table" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="blockk" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>Otel ID: </b><h:head>#{otelController.otel.otel_id}</h:head><br/>
+                    <b>Otel Adı: </b><h:head>#{otelController.otel.otel_adi}</h:head>
+
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton  action="#{otelController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="otel-table otel-form paginationOtel" />
+                        </h:commandButton>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form> 
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+</ui:composition>
+

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <h:form id="iletisim-form" rendered="#{yetkilendirmeController.readKontrol and (yetkilendirmeController.createKontrol or yetkilendirmeController.updateKontrol)}">
+        <div class="form-group">
+            <div class="form-group">
+                <h:inputHidden value="#{iletisimController.iletisim.tel}" />
+                <label for="inputName" class="">Telefon No</label>
+                <h:inputText validator="#{iletisimController.telValidate}" class="form-control" id="tel"  value="#{iletisimController.iletisim.tel}"/>
+                <h:message for="tel" styleClass="alert-danger" /><br/>
+                <label for="inputName" class="">E-posta</label> 
+                <h:inputText validator="#{iletisimController.emailValidate}" class="form-control" id="email"  value="#{iletisimController.iletisim.eposta}"/>
+                <h:message for="email" styleClass="alert-danger"/> <br/>
+                <label for="inputName" class="">Müşteri Adı</label>
+                <h:selectOneMenu styleClass="custom-select" id="secimMusteri" value="#{iletisimController.iletisim.musteri}" converter="musteriConverter">
+                    <f:selectItems value="#{iletisimController.musteriList}" var="musteri" itemValue="#{musteri}" itemLabel="#{musteri.musteri_adi_soyadi}"/>                                
+                </h:selectOneMenu>
+            </div>
+            <div class="btn-group">
+                <h:commandButton rendered="#{iletisimController.iletisim.iletisim_id == null and yetkilendirmeController.createKontrol}" styleClass="btn btn-primary" value="Olustur" action="#{iletisimController.create}">
+                    <f:ajax execute="iletisim-form" render="iletisim-form iletisim-table paginationIletisim" />
+                </h:commandButton>
+                <h:commandButton rendered="#{iletisimController.iletisim.iletisim_id!= null and yetkilendirmeController.updateKontrol}" styleClass="btn btn-info"  value="Guncelle" action="#{iletisimController.update()}">
+                    <f:ajax execute="iletisim-form" render="iletisim-form iletisim-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{iletisimController.iletisim.iletisim_id != null}" styleClass="btn btn-success"   value="Temizle" action="#{iletisimController.clearForm}">
+                    <f:ajax execute="@this" render="iletisim-form iletisim-table" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="blockk" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>İletişim ID: </b><h:head>#{iletisimController.iletisim.iletisim_id}</h:head><br/>
+                    <b>Musteri Adi:  </b><h:head>#{iletisimController.iletisim.musteri.musteri_adi_soyadi}</h:head>
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton  action="#{iletisimController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="iletisim-table iletisim-form paginationIletisim" />
+                        </h:commandButton>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form>
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+</ui:composition>
+

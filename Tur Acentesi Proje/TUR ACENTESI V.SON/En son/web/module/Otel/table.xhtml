@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="otel-table" rendered="#{yetkilendirmeController.readKontrol}">
+        
+        <h:dataTable styleClass="table table-hover" value="#{otelController.otelList}" var="otel">  
+            <h:column>                    
+                <f:facet name="header">OTEL ID</f:facet>
+                    #{otel.otel_id}
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">OTEL ADI</f:facet>                            
+                <h:commandLink value="#{otel.otel_adi}" action="#{otelController.updateForm(otel)}">
+                    <f:ajax execute="@this" render="otel-form" />
+                </h:commandLink>
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">OTEL YILDIZI</f:facet>
+                    #{otel.otel_yildizi}
+            </h:column>
+            <h:column>                    
+                <f:facet name="header">ACENTE ŞUBE ADI</f:facet>
+                    #{otel.acente.sube_adi}
+            </h:column>
+            <h:column> 
+                <f:facet name="header"></f:facet>
+                <h:commandButton onclick="$('.modal').modal('show')" rendered="#{yetkilendirmeController.deleteKontrol}" value="SİL" styleClass="btn btn-danger" action="#{otelController.deleteConfirm(otel)}">
+                    <f:ajax execute="@this" render="delete-modal delete" />
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>                
+    </h:form>
+</ui:composition>

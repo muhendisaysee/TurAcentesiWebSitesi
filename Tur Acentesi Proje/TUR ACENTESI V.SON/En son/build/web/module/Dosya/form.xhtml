@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <br></br>
+    <br></br>
+    <br></br>
+    <h:form id="dosya-form" enctype="multipart/form-data" class="form-group" rendered="#{yetkilendirmeController.readKontrol and yetkilendirmeController.createKontrol}">
+        <h:inputFile class="custom-file" value="#{dosyaController.doc}" />
+        <h:commandButton value="Yükle" action="#{dosyaController.Upload()}" class="btn btn-info">
+            <f:ajax execute="dosya-form" render="dosya-form paginationDosya dosya-table" />
+        </h:commandButton>
+    </h:form>    
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="block" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>Dosya ID: </b><h:head>#{dosyaController.dosya.dosya_id}</h:head><br/>
+                    <b>Dosya Adı: </b><h:head>#{dosyaController.dosya.dosya_adi}</h:head>
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton  action="#{dosyaController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="dosya-table dosya-form paginationDosya" />
+                        </h:commandButton>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form>
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+</ui:composition>
+

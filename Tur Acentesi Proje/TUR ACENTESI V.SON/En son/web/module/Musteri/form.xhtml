@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="musteri-form" rendered="#{yetkilendirmeController.accessKontrol and yetkilendirmeController.readKontrol and (yetkilendirmeController.createKontrol or yetkilendirmeController.updateKontrol)}">
+        <div class="form-group">
+            <div class="form-group">
+                <h:inputHidden value="#{musteriController.musteri.musteri_adi_soyadi}" />
+                <label for="inputName" class="">Müşteri Adı Soyadı </label>
+                <h:inputText id="musteriKontrol" validator="#{musteriController.validateDuzen}" class="form-control" value="#{musteriController.musteri.musteri_adi_soyadi}"/>
+                <h:message for="musteriKontrol" styleClass="alert-danger"/><br/>
+                <label for="inputName" class="">Kampanya Türü</label>
+                <h:selectOneMenu styleClass="custom-select" id="secimKampanya" converter="kampanyaConverter" value="#{musteriController.musteri.kampanya}">
+                    <f:selectItems value="#{musteriController.kampanyaList}" var="kampanya" itemValue="#{kampanya}" itemLabel="#{kampanya.kampanya_turu}"/>                                
+                </h:selectOneMenu><br/>
+                <label for="inputName" class="">Tur Adı</label>
+                <h:selectManyListbox validator="#{musteriController.validateSecim}" class="form-control" value="#{musteriController.musteri.turMusteriList}" converter="turConverter" id="secimTurList">
+                    <f:selectItems value="#{musteriController.turList}" var="tur" itemValue="#{tur}" itemLabel="#{tur.tur_adi}"/>
+                </h:selectManyListbox>
+                <h:message for="secimTurList" styleClass="alert-danger"/><br/>
+                <h:form rendered="#{yetkilendirmeController.accessKontrol}">
+                    <label  for="inputName" class="">Müşteri Şifre </label>
+                    <h:inputText id="sifreKontrol" validator="#{musteriController.validateSifre}"  class="form-control" value="#{musteriController.musteri.musteri_sifre}"/>
+                    <h:message for="sifreKontrol" styleClass="alert-danger"/>
+                </h:form>
+            </div>
+            <div class="btn-group">
+                <h:commandButton rendered="#{musteriController.musteri.musteri_id == null and yetkilendirmeController.createKontrol }" styleClass="btn btn-primary" value="Olustur" action="#{musteriController.create()}">
+                    <f:ajax execute="musteri-form" render="musteri-form paginationMusteri musteri-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{musteriController.musteri.musteri_id != null and yetkilendirmeController.updateKontrol}" styleClass="btn btn-info"  value="Guncelle" action="#{musteriController.update()}">
+                    <f:ajax execute="musteri-form" render="musteri-form musteri-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{musteriController.musteri.musteri_id != null}" styleClass="btn btn-success"   value="Temizle" action="#{musteriController.clearForm}">
+                    <f:ajax execute="@this" render="musteri-form musteri-table" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="block" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>Musteri ID: </b><h:head>#{musteriController.musteri.musteri_id}</h:head><br/>
+                    <b>Musteri Adı: </b><h:head>#{musteriController.musteri.musteri_adi_soyadi}</h:head>
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton  action="#{musteriController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="musteri-table paginationMusteri musteri-form" />
+                        </h:commandButton>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form>
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+
+</ui:composition>
+

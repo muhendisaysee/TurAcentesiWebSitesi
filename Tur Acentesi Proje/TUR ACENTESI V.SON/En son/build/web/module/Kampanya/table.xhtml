@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="kampanya-table" rendered="#{yetkilendirmeController.readKontrol}">
+       
+        <h:dataTable styleClass="table table-hover" value="#{kampanyaController.kampanyaList}" var="kampanya" rendered="#{yetkilendirmeController.readKontrol}">  
+            <h:column>                    
+                <f:facet name="header">KAMPANYA ID</f:facet>
+                    #{kampanya.kampanya_id}
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">KAMPANYA TÜRÜ</f:facet>                            
+                <h:commandLink value="#{kampanya.kampanya_turu}" action="#{kampanyaController.updateForm(kampanya)}">
+                    <f:ajax execute="@this" render="kampanya-form" />
+                </h:commandLink>
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">KAMPANYA DETAYI</f:facet>
+                    #{kampanya.kampanya_detayi}
+            </h:column>
+            <h:column>                    
+                <f:facet name="header">ACENTE ŞUBE ADI</f:facet>
+                    #{kampanya.acente.sube_adi}
+            </h:column>
+            <h:column> 
+                <f:facet name="header"></f:facet>
+                <h:commandButton onclick="$('.modal').modal('show')" value="SİL" rendered="#{yetkilendirmeController.deleteKontrol}" styleClass="btn btn-danger" action="#{kampanyaController.deleteConfirm(kampanya)}">
+                    <f:ajax execute="@this" render="delete-modal delete" />
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>                
+    </h:form>
+</ui:composition>

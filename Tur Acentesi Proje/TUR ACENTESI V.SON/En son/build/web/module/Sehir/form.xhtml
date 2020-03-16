@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="sehir-form" rendered="#{yetkilendirmeController.readKontrol and (yetkilendirmeController.createKontrol or yetkilendirmeController.updateKontrol)}">
+        <div class="form-group">
+            <div class="form-group">
+                <label for="secimAcente">Acente Şube Adı</label>
+                <h:selectOneMenu styleClass="custom-select" id="secimAcente" value="#{sehirController.sehir.acente}" converter="acenteConverter" >
+                    <f:selectItems value="#{sehirController.acenteList}" var="Acente" itemValue="#{Acente}" itemLabel="#{Acente.sube_adi}"/>
+                </h:selectOneMenu>
+                <label for="inputName" class="">Şehir Adı </label>
+                <h:inputText validator="#{sehirController.validateDuzen}" id="sehirKontrol" class="form-control" value="#{sehirController.sehir.sehir_adi}"/>
+                <h:messages for="sehirKontrol" styleClass="alert-danger" />
+                <label for="inputName" class="">Şehir Adres  </label> 
+                <h:inputText validator="#{sehirController.validateDuzen}" id="sehirAdresKontrol" class="form-control" value="#{sehirController.sehir.sehir_adres}"/>
+                <h:messages for="sehirAdresKontrol" styleClass="alert-danger" />
+                <label for="inputName" class="">Telefon No</label> 
+                <h:inputText validator="#{sehirController.telValidate}" class="form-control" id="tel" value="#{sehirController.sehir.sehir_tel}" />
+                <h:message for="tel" styleClass="alert-danger" /><br/>
+            </div>
+            <div class="btn-group">
+                <h:commandButton rendered="#{sehirController.sehir.sehir_id == null and yetkilendirmeController.createKontrol}" styleClass="btn btn-primary" value="Olustur" action="#{sehirController.create}">
+                    <f:ajax execute="sehir-form" render="sehir-form  paginationSehir sehir-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{sehirController.sehir.sehir_id != null and yetkilendirmeController.updateKontrol}" styleClass="btn btn-info"  value="Guncelle" action="#{sehirController.update()}">
+                    <f:ajax execute="sehir-form" render="sehir-form sehir-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{sehirController.sehir.sehir_id != null}" styleClass="btn btn-success"   value="Temizle" action="#{sehirController.clearForm}">
+                    <f:ajax execute="@this" render="sehir-form sehir-table" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="blockk" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>Sehir ID: </b><h:head>#{sehirController.sehir.sehir_id}</h:head><br/>
+                    <b>Sehir Adı: </b><h:head>#{sehirController.sehir.sehir_adi}</h:head>
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton  action="#{sehirController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="sehir-table sehir-form  paginationSehir" />
+                        </h:commandButton>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form> 
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+</ui:composition>
+

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="yetkilendirme-table" rendered="#{yetkilendirmeController.readKontrol}">
+          
+        <h:dataTable styleClass="table table-hover" value="#{yetkilendirmeController.yetkilendirmeList}" var="yetkilendirme">
+            <h:column>                    
+                <f:facet name="header">YETKİLENDİRME ID</f:facet>
+                    #{yetkilendirme.yetkilendirme_id}
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">YETKİLENDİRME BÖLÜM ADI</f:facet>
+                <h:commandLink disabled="#{yetkilendirmeController.SuperAdmin(yetkilendirme)!=true}"  value="#{yetkilendirme.y_bolum_adi}" action="#{yetkilendirmeController.updateForm(yetkilendirme)}">
+                    <f:ajax execute="@this" render="yetkilendirme-form" />
+                </h:commandLink>
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">GRUP ADI</f:facet>
+                    #{yetkilendirme.grup.grup_adi}
+            </h:column>
+            <h:column rendered="#{yetkilendirmeController.accessKontrol and yetkilendirmeController.deleteKontrol}"> 
+                <f:facet name="header"></f:facet>
+                <h:commandButton rendered="#{yetkilendirmeController.SuperAdmin(yetkilendirme)}" onclick="$('.modal').modal('show')" value="SIL" styleClass="btn btn-danger" action="#{yetkilendirmeController.deleteConfirm(yetkilendirme)}">
+                    <f:ajax execute="@this" render="delete-modal delete" />
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>
+    </h:form>
+</ui:composition>
+

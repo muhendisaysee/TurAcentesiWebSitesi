@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+
+    <h:form id="iletisim-table" rendered="#{yetkilendirmeController.readKontrol}">
+
+        <h:dataTable styleClass="table table-hover table-striped" value="#{iletisimController.iletisimlist}" var="iletisim">  
+            <h:column>                    
+                <f:facet name="header">İLETİŞİM ID</f:facet>
+                    #{iletisim.iletisim_id}
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">İLETİŞİM TELEFONU</f:facet>                            
+                <h:commandLink value="#{iletisim.tel}" action="#{iletisimController.updateForm(iletisim)}">
+                    <f:ajax execute="@this" render="iletisim-form" />
+                </h:commandLink>
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">İLETİŞİM E-POSTA </f:facet>
+                    #{iletisim.eposta}
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">MÜŞTERİ ADI SOYADI</f:facet>
+                    #{iletisim.musteri.musteri_adi_soyadi}
+            </h:column>
+            <h:column rendered="#{yetkilendirmeController.deleteKontrol}"> 
+                <f:facet name="header"></f:facet>
+                <h:commandButton onclick="$('.modal').modal('show')" value="SİL" styleClass="btn btn-danger" action="#{iletisimController.deleteConfirm(iletisim)}">
+                    <f:ajax execute="@this" render="delete-modal delete" />
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>                
+    </h:form>
+
+</ui:composition>

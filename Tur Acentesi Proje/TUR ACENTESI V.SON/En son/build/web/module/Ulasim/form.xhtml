@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="ulasimForm" rendered="#{yetkilendirmeController.readKontrol and (yetkilendirmeController.createKontrol or yetkilendirmeController.updateKontrol)}">
+        <div class="form-group">
+            <label for="selectAcente">Acente Şube Adı</label>
+            <h:selectOneMenu styleClass="custom-select"  id="selectAcente" value="#{ulasimController.ulasim.acente}" converter="acenteConverter">
+                <f:selectItems  value="#{ulasimController.acenteList}" var="acente" itemValue="#{acente}" itemLabel="#{acente.sube_adi}" />
+            </h:selectOneMenu>
+        </div>
+        <div class="form-group">
+            <label for="ulasimKalkisYeri">Ulaşım Kalkış Yeri</label>
+            <h:inputText validator="#{ulasimController.validateDuzen}" id="ulasimKalkisKontrol" value="#{ulasimController.ulasim.ulasim_kalkis_yeri}" styleClass="form-control" />
+            <h:messages for="ulasimKalkisKontrol" styleClass="alert-danger" />
+        </div>
+        <div class="form-group">
+            <label for="ulasimVarisYeri">Ulaşım Varış Yeri</label>
+            <h:inputText validator="#{ulasimController.validateDuzen}" id="ulasimVarisKontrol" value="#{ulasimController.ulasim.ulasim_varis_yeri}" styleClass="form-control" />
+            <h:messages for="ulasimVarisKontrol" styleClass="alert-danger" />
+        </div>
+        <div class="form-group">
+            <label for="ulasimTuru">Ulaşım Türü</label>
+            <h:inputText validator="#{ulasimController.validateDuzen}" id="ulasimTuruKontrol" value="#{ulasimController.ulasim.ulasim_turu}" styleClass="form-control" />
+            <h:messages for="ulasimTuruKontrol" styleClass="alert-danger" />
+        </div>
+        <div class="btn-group" >
+            <h:commandButton rendered="#{ulasimController.ulasim.ulasim_id != null and yetkilendirmeController.updateKontrol}" styleClass="btn btn-info"  value="Güncelle" action="#{ulasimController.update()}">
+                <f:ajax execute="ulasimForm" render="ulasimForm ulasimTable "/>
+            </h:commandButton>                        
+            <h:commandButton rendered="#{ulasimController.ulasim.ulasim_id == null and yetkilendirmeController.createKontrol}" styleClass="btn btn-primary"  value="Oluştur"  action="#{ulasimController.create}">
+                <f:ajax execute="ulasimForm" render="ulasimForm ulasimTable paginationUlasim "/>
+            </h:commandButton>
+            <h:commandButton rendered="#{ulasimController.ulasim.ulasim_id != null}" styleClass="btn btn-success" value="Temizle" action="#{ulasimController.clearForm()}">
+                <f:ajax execute="@this" render="ulasimForm "/>
+            </h:commandButton>
+        </div>
+    </h:form>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="block" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>Ulaşım ID: </b><h:head>#{ulasimController.ulasim.ulasim_id}</h:head><br/>
+                    <b>Ulaşım Türü: </b><h:head>#{ulasimController.ulasim.ulasim_turu}</h:head>
+
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton  action="#{ulasimController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="ulasim-table ulasim-form paginationUlasim" />
+                        </h:commandButton>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form>
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+    
+</ui:composition>
+

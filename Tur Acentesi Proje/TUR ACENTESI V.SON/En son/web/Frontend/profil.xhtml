@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Frontend/Template/Template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <br/><br/>
+        <div class="col-md-10" style="background-image: url(tur.jpg)">
+            <h3>Bilgileriniz</h3>
+
+            <h:form>
+                <br/><br/>
+                <b>Ad Soyad</b>
+                <h:inputText id="adSoyad" required="true" requiredMessage="Lütfen Eksik Alan Bırakmayınız !" value="#{frontendController.iletisim.musteri.musteri_adi_soyadi}" class="form-control"/>
+                <h:message for="adSoyad" styleClass="alert-danger"/><br/><br/>
+                <b>E-posta</b>
+                <h:inputText id="eposta" validator="#{iletisimController.emailValidate}" value="#{frontendController.iletisim.eposta}" class="form-control"/>
+                <h:message for="eposta" styleClass="alert-danger"/><br/><br/>
+                <b>Telefon</b>
+                <h:inputText id="telefon" validator="#{iletisimController.telValidate}" value="#{frontendController.iletisim.tel}" class="form-control"/>
+                <h:message for="telefon" styleClass="alert-danger"/><br/><br/>
+                <b>Şifre</b>
+                <h:inputText id="sifre" validator="#{musteriController.validateSifre}" required="true" requiredMessage="Eksik Alan Bırakmayınız !" value="#{frontendController.iletisim.musteri.musteri_sifre}" class="form-control"/>
+                <h:message for="sifre" styleClass="alert-danger"/><br/><br/>
+                <h:commandButton action="#{frontendController.update()}" value="Güncelle" styleClass="btn btn-info" />
+            </h:form>
+            <br/>
+            <br/>
+            <h3>Sahip Olunan Turlar</h3>
+            <h:form>
+                <h:dataTable class="table" value="#{frontendController.iletisim.musteri.turMusteriList}" var="tur">
+                    <h:column>
+                        <f:facet name="header">Tur Adı</f:facet>
+                        <b>#{tur.tur_adi}</b>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Tur Tarihi</f:facet>
+                        <b>#{tur.tur_tarihi}</b>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">İptal Et</f:facet>
+                        <h:commandButton action="#{frontendController.delete(tur)}" value="İptal Et" styleClass="btn btn-danger"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+
+            <h:form rendered="#{frontendController.tur != null}">
+                <br/>
+                <br/>
+                <h3>Satın Alma İşlemleri</h3>
+                <br/>
+                <b>Satın Alınacak Tur</b>  
+                <h:dataTable class="table" value="#{frontendController.tur}" var="tur">
+                    <h:column>
+                        <f:facet name="header">Tur Adı</f:facet>
+                        <b>#{tur.tur_adi}</b>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Tur Tarihi</f:facet>
+                        <b>#{tur.tur_tarihi}</b>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton action="#{frontendController.turSil()}" value="Sil" styleClass="btn btn-danger"/>
+                    </h:column>
+                </h:dataTable>
+                <b>Kampanya Türü</b>  
+                <h:selectOneMenu styleClass="custom-select" id="secimKampanya" converter="kampanyaConverter" value="#{frontendController.iletisim.musteri.kampanya}">
+                    <f:selectItems value="#{musteriController.kampanyaList}" var="kampanya" itemValue="#{kampanya}" itemLabel="#{kampanya.kampanya_turu}"/>                                
+                </h:selectOneMenu><br/>
+                <br/>
+                <b>Oteller</b> 
+                <br/>
+                <h:dataTable class="table" value="#{otelController.otelDAO.findByAcenteId(frontendController.tur.acente.acente_id)}" var="otel">
+                    <h:column>
+                        <f:facet name="header">Otel Adı</f:facet>
+                        <b>#{otel.otel_adi}</b>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Otel yıldızı</f:facet>
+                        <b>#{otel.otel_yildizi}</b>
+                    </h:column>
+                </h:dataTable>
+                <br/>
+                <br/>
+                <b>Ulaşım</b>
+                <br/>               
+                
+                <h:dataTable class="table" value="#{ulasimController.ulasimDAO.findByAcenteId(frontendController.tur.acente.acente_id)}" var="ulasim">
+                    <h:column>
+                        <f:facet name="header">Ulasim Kalkış Yeri</f:facet>
+                        <b>#{ulasim.ulasim_kalkis_yeri}</b>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Ulasim Varış Yeri</f:facet>
+                        <b>#{ulasim.ulasim_varis_yeri}</b>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Ulasim Turu</f:facet>
+                        <b>#{ulasim.ulasim_turu}</b>
+                    </h:column>
+                </h:dataTable>
+                <br/>
+                <br/>
+                <b>Sigorta</b>
+                <br/>
+                <h:dataTable class="table" value="#{sigortaController.sigortaDAO.findByAcenteId(frontendController.tur.acente.acente_id)}" var="sigorta">
+                    <h:column>
+                        <f:facet name="header">Sigorta Adi</f:facet>
+                        <b>#{sigorta.sigorta_adi}</b>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Sigorta Süresi</f:facet>
+                        <b>#{sigorta.sigorta_suresi}</b>
+                    </h:column>
+                </h:dataTable>
+                <br/>
+                <br/>
+
+                <h:commandButton value="Satın Al" action="#{frontendController.satınAl()}" styleClass="btn btn-info"/>
+                <br/>
+                <br/>
+            </h:form>
+
+        </div>
+
+    </ui:define>
+</ui:composition>
+

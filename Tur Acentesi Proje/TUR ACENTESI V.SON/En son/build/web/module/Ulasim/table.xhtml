@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="ulasimTable" rendered="#{yetkilendirmeController.readKontrol}">
+          
+        <h:dataTable styleClass="table table-hover" value="#{ulasimController.ulasimList}" var="ulasim">
+            <h:column>
+                <f:facet name="header">ULAŞIM ID</f:facet>
+                    #{ulasim.ulasim_id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">ULAŞIM KALKIŞ YERİ</f:facet>
+                <h:commandLink action="#{ulasimController.updateForm(ulasim)}" value="#{ulasim.ulasim_kalkis_yeri}">
+                    <f:ajax execute="@this" render="ulasimForm "/>
+                </h:commandLink>
+            </h:column>
+            <h:column>
+                <f:facet name="header">ULAŞIM VARIŞ YERİ</f:facet>
+                    #{ulasim.ulasim_varis_yeri}
+            </h:column>
+            <h:column>
+                <f:facet name="header">ULAŞIM TÜRÜ</f:facet>
+                    #{ulasim.ulasim_turu}
+            </h:column>
+            <h:column>
+                <f:facet name="header">ACENTE ŞUBE ADI</f:facet>
+                    #{ulasim.acente.sube_adi}
+            </h:column>
+            <h:column rendered="#{yetkilendirmeController.deleteKontrol}">
+                <h:commandButton  onclick="$('.modal').modal('show')" action="#{ulasimController.deleteForm(ulasim)}"  styleClass="btn btn-danger" value="SİL" >
+                    <f:ajax execute="@this"   render="delete-modal delete" />
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>
+    </h:form>
+</ui:composition>
+

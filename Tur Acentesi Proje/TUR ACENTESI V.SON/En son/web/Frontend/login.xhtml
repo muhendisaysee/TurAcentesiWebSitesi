@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Frontend/Template/Template.xhtml"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+    <ui:define name="content">
+        <br/><br/>
+        <div class="container" style="background-image:url(tur.jpg)">
+                            <h:messages globalOnly="true" styleClass="alert-danger"/>
+            <div class="row">
+                <div class="col-auto" style="left:100px">
+                    <br/><br/><br/><br/>
+                    <center><h3>Giriş Yap !</h3></center>
+                    <br/>
+                    <h:form>
+                        <center>
+                            <h:inputText value="#{loginController.kullanici_adi}" a:placeholder="Kullanici Adi veya E-Posta" styleClass="alert" /> <br/>
+                            <br/> <h:inputSecret a:placeholder="Şifre" value="#{loginController.sifre}" styleClass="alert"/>
+                            <br/><br/>
+                            <h:commandButton action="#{loginController.login}" value="Giriş Yap" styleClass="btn btn-info" >
+                                #{turController.setAramaTerimi(null)}
+                            </h:commandButton>
+                        </center>
+                    </h:form>
+                    <br/><br/>
+                </div>
+                <div class="col-auto" style="left: 500px">
+                    <br/>
+                    <h:form>
+                        <center>
+                            <h3>Üye Ol !</h3><br/>
+                            <h:inputText id="adSoyad" a:placeholder="Ad Soyad" validator="#{musteriController.validateDuzen}" value="#{frontendController.kayitIletisim.musteri.musteri_adi_soyadi}" styleClass="alert " /><br/><h:message for="adSoyad" styleClass="alert-danger" /> <br/>                            
+                            <br/><h:inputText id="tel" a:placeholder="Telefon" validator="#{iletisimController.telValidate}"  value="#{frontendController.kayitIletisim.tel}" styleClass="alert"/><br/><h:message for="tel" styleClass="alert-danger"/><br/>
+                            <br/><h:inputText id="eposta" a:placeholder="E-Posta" validator="#{iletisimController.emailValidate}"  value="#{frontendController.kayitIletisim.eposta}" styleClass="alert"/><br/><h:message for="eposta" styleClass="alert-danger"/><br/>
+                            <br/><h:inputSecret id="sifre" a:placeholder="Şifre" validator="#{musteriController.validateSifre}" required="true" requiredMessage="Lütfen Eksik Alan Bırakmayınız" value="#{frontendController.kayitIletisim.musteri.musteri_sifre}" styleClass="alert" /> <br/><h:message for="sifre" styleClass="alert-danger"/> <br/>
+                            <br/>
+                            <h:commandButton action="#{frontendController.create()}" value="Üye Ol" styleClass="btn btn-info" />
+                        </center>
+                    </h:form>
+                    <br/><br/>
+                </div>
+            </div>
+        </div><br/>
+        <hr style="background-color: white"/>
+        <center><img src="../icerik2.png" alt="" height="150px" width="320px"/></center> 
+    </ui:define>
+</ui:composition>
+
+
+

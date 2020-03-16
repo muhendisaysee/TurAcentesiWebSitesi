@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:form id="bolum-table" rendered="#{yetkilendirmeController.readKontrol}">
+        <h:dataTable styleClass="table table-hover" value="#{bolumController.bolumList}" var="bolum">  
+            <h:column>                    
+                <f:facet name="header">BÖLÜM ID</f:facet>
+                    #{bolum.bolum_id}
+            </h:column> 
+            <h:column>                    
+                <f:facet name="header">BÖLÜM ADI</f:facet>                            
+                <h:commandLink value="#{bolum.bolum_adi}" action="#{bolumController.updateForm(bolum)}">
+                    <f:ajax execute="@this" render="bolum-form" />
+                </h:commandLink>
+            </h:column> 
+            <h:column rendered="#{yetkilendirmeController.deleteKontrol and yetkilendirmeController.accessKontrol}" > 
+                <f:facet name="header"></f:facet>
+                <h:commandButton onclick="$('.modal').modal('show')" value="SİL" styleClass="btn btn-danger" action="#{bolumController.deleteConfirm(bolum)}">
+                    <f:ajax execute="@this" render="delete-modal delete" />
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>                
+    </h:form>
+</ui:composition>
+

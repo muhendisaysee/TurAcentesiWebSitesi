@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="tur-form" rendered="#{yetkilendirmeController.readKontrol and (yetkilendirmeController.createKontrol or yetkilendirmeController.updateKontrol)}">
+        <div class="form-group">
+            <div class="form-group">
+                <label for="inputName" class="">Tur Adı</label>
+                <h:inputText validator="#{turController.validateDuzen}" id="adiKontrol" class="form-control" value="#{turController.tur.tur_adi}"/>
+                <h:message for="adiKontrol" styleClass="alert-danger"/>
+                <br/>
+                <label for="inputName" class="">Tur Türü</label> 
+                <h:selectOneMenu styleClass="custom-select" value="#{turController.tur.tur_turu}" id="turKontrol">
+                    <f:selectItems value="#{turController.turTuruList}" />
+                </h:selectOneMenu>
+                <h:message for="turKontrol" styleClass="alert-danger"/>
+                <br/>
+                <label for="inputName" class="">Tur Tarihi</label><br/>
+                <h:inputText id="date" class="form-control" value="#{turController.tur.tur_tarihi}" required="true" converterMessage="Lütfen geçerli bir tarih giriniz .(Örn: 2019-04-05)" requiredMessage="Lütfen bir tur tarihi belirleyiniz!">
+                    <f:convertDateTime type="both" dateStyle="full" pattern="yyyy-MM-dd" />
+                </h:inputText>
+                <h:message for="date" styleClass="alert-danger"/>
+                <br/>
+                <label for="inputName" class="">Acente Şube</label>
+                <h:selectOneMenu styleClass="custom-select" id="secimAcente" value="#{turController.tur.acente}" converter="acenteConverter" >
+                    <f:selectItems value="#{turController.acenteList}" var="acente" itemValue="#{acente}" itemLabel="#{acente.sube_adi}"/>                                
+                </h:selectOneMenu>              
+                <h:message for="secimAcente"/>
+                <label for="inputName" class="">Dosya Adı</label>
+                <h:selectOneMenu  styleClass="custom-select" id="secimDosya" value="#{turController.tur.dosya}" converter="dosyaConverter" >
+                    <f:selectItems value="#{turController.dosyaList}" var="dosya" itemValue="#{dosya}" itemLabel="#{dosya.dosya_adi}"/>                                
+                </h:selectOneMenu>
+            </div>
+            <div class="btn-group">
+                <h:commandButton rendered="#{turController.tur.tur_id == null and yetkilendirmeController.createKontrol}" styleClass="btn btn-primary" value="Olustur" action="#{turController.create}">
+                    <f:ajax execute="tur-form" render="tur-form tur-table paginationTur" />
+                </h:commandButton>
+                <h:commandButton rendered="#{turController.tur.tur_id != null and yetkilendirmeController.updateKontrol}" styleClass="btn btn-info" value="Guncelle" action="#{turController.update()}">
+                    <f:ajax execute="tur-form" render="tur-form tur-table" />
+                </h:commandButton>
+                <h:commandButton rendered="#{turController.tur.tur_id != null}" styleClass="btn btn-success"   value="Temizle" action="#{turController.clearForm}">
+                    <f:ajax execute="@this" render="tur-form tur-table" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <h:panelGroup layout="block" class="modal-content" id="delete-modal" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Sil</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <b><pre>Silmek istediginizden emin misiniz ?</pre><br/></b>
+                    <b>Tur ID: </b><h:head>#{turController.tur.tur_id}</h:head><br/>
+                    <b>Tur Adı: </b><h:head>#{turController.tur.tur_adi}</h:head>
+
+                </div>
+                <div class="modal-footer">
+                    <h:form id="delete">
+                        <h:commandButton  action="#{turController.delete()}" onclick="$('.modal').modal('.hide')"  value="Sil" styleClass="btn btn-danger" >
+                            <f:ajax execute="@this" render="tur-table tur-form paginationTur" />
+                        </h:commandButton>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Kapat</button>
+                    </h:form>
+                </div>
+            </h:panelGroup>
+        </div>
+    </div>
+</ui:composition>

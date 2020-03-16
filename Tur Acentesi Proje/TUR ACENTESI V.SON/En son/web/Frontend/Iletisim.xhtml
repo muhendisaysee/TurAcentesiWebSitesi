@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/Frontend/Template/Template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <br/><br/>
+        <div style="background-image: url(tur.jpg)">
+            <br/>
+            <center><h4>İletişim Bilgilerimiz</h4></center><br/>
+            <h:form>
+                <h:dataTable value="#{frontendController.sehirList}" var="sehir" class="table">
+                    <h:column>
+                        <f:facet name="header">Şehir</f:facet>
+                            #{sehir.sehir_adi}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Adres</f:facet>
+                            #{sehir.sehir_adres}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Telefon</f:facet>
+                            #{sehir.sehir_tel}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Şube Adı</f:facet>
+                            #{sehir.acente.sube_adi}
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+
